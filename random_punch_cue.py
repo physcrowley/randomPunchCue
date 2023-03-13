@@ -24,8 +24,8 @@ END_STATE = 2
 game_state = START_STATE
 
 # Set the screen size
-SCREEN_WIDTH = 450
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 1600
 
 # Set the window caption
 pygame.display.set_caption("Random Punch Cue")
