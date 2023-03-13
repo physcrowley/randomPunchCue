@@ -1,6 +1,5 @@
 import pygame
 import random
-import time
 
 # Initialize Pygame
 pygame.init()
@@ -11,6 +10,7 @@ WHITE = (255, 255, 255)
 GRAY = (128, 128, 128)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
+GOLD = (255, 215, 0)
 
 # Set the font
 FONT = pygame.font.Font(None, 36)
@@ -18,13 +18,14 @@ FONT = pygame.font.Font(None, 36)
 # Set the game states
 START_STATE = 0
 GAME_STATE = 1
+END_STATE = 2
 
 # Set the initial game state
 game_state = START_STATE
 
 # Set the screen size
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 1800
+SCREEN_WIDTH = 450
+SCREEN_HEIGHT = 600
 
 # Set the window caption
 pygame.display.set_caption("Random Punch Cue")
@@ -45,6 +46,9 @@ for i in range(2):
     for j in range(3):
         square = pygame.Rect(i*square_width, j*square_height, square_width, square_height)
         squares.append(square)
+
+next_square = random.randint(0,len(squares))
+current_square = next_square
 
 # Define the functions
 
@@ -82,11 +86,17 @@ def draw_game_screen():
         else:
             pygame.draw.rect(window, GRAY, square)
 
-# Start the game loop
-next_square = random.randint(0,len(squares))
-current_square = next_square
-start_time = time.time()
+def draw_end_screen():
+    # Clear the screen
+    window.fill(GOLD)
 
+    # Draw the title
+    title_text = FONT.render("Good Work!", True, BLACK)
+    title_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/3))
+    window.blit(title_text, title_rect)
+
+# Start the game loop
+reps = 0
 
 while True:
     # Check for events
@@ -96,6 +106,7 @@ while True:
             quit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if game_state == START_STATE:
+                reps = 0
                 if start_button.collidepoint(event.pos):
                     game_state = GAME_STATE
                 elif quit_button.collidepoint(event.pos):
@@ -106,12 +117,27 @@ while True:
     if game_state == START_STATE:
         draw_start_screen()
     elif game_state == GAME_STATE:
-        for i in range(8):
-            current_square = next_square
-            draw_game_screen()
-            pygame.time.wait(4000)
-            while next_square == current_square :
-                next_square = random.randint(0,len(squares))
+        draw_game_screen()
+    elif game_state == END_STATE :
+        draw_end_screen()
+    pygame.display.update()
 
-
+    # state updates
+    if game_state == GAME_STATE :
+        # delay between reps 
+        pygame.time.wait(3000)
+        
+        # different random square position
+        while next_square == current_square :
+            next_square = random.randint(0,len(squares)-1)
+        current_square = next_square
+        
+        # move to end state after 10 reps
+        reps += 1
+        if reps == 10 :
+            game_state = END_STATE   
+    elif game_state == END_STATE :
+        # move to start state immediately after showing end screen
+        pygame.time.wait(3000)
+        game_state = START_STATE
         
