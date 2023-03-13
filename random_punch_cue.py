@@ -30,6 +30,10 @@ pygame.display.set_caption("Pygame Example")
 # Create the window
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
+# Define the Rect objects for the buttons
+start_button = pygame.Rect(150, 200, 100, 50)
+quit_button = pygame.Rect(350, 200, 100, 50)
+
 # Define the functions
 
 def draw_start_screen():
@@ -42,14 +46,12 @@ def draw_start_screen():
     window.blit(title_text, title_rect)
 
     # Draw the start button
-    start_button = pygame.Rect(150, 200, 100, 50)
     pygame.draw.rect(window, GREEN, start_button)
     start_text = FONT.render("Start", True, WHITE)
     start_rect = start_text.get_rect(center=start_button.center)
     window.blit(start_text, start_rect)
 
     # Draw the quit button
-    quit_button = pygame.Rect(350, 200, 100, 50)
     pygame.draw.rect(window, RED, quit_button)
     quit_text = FONT.render("Quit", True, WHITE)
     quit_rect = quit_text.get_rect(center=quit_button.center)
@@ -70,10 +72,6 @@ def draw_game_screen():
                 pygame.draw.rect(window, BLACK, square)
             else:
                 pygame.draw.rect(window, GRAY, square)
-
-# Set the button variables globally
-start_button = None
-quit_button = None
 
 # Start the game loop
 while True:
