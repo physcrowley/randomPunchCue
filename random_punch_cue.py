@@ -71,6 +71,10 @@ def draw_game_screen():
             else:
                 pygame.draw.rect(window, GRAY, square)
 
+# Set the button variables globally
+start_button = None
+quit_button = None
+
 # Start the game loop
 while True:
     # Check for events
