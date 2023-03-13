@@ -27,7 +27,7 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 1800
 
 # Set the window caption
-pygame.display.set_caption("Pygame Example")
+pygame.display.set_caption("Random Punch Cue")
 
 # Create the window
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -53,7 +53,7 @@ def draw_start_screen():
     window.fill(WHITE)
 
     # Draw the title
-    title_text = FONT.render("Welcome to Pygame Example", True, BLACK)
+    title_text = FONT.render("Welcome to the Punch Block Cuer", True, BLACK)
     title_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/4))
     window.blit(title_text, title_rect)
 
@@ -83,9 +83,10 @@ def draw_game_screen():
             pygame.draw.rect(window, GRAY, square)
 
 # Start the game loop
-current_square = None
-start_time = None
-red_count = 0
+next_square = random.randint(0,len(squares))
+current_square = next_square
+start_time = time.time()
+
 
 while True:
     # Check for events
@@ -105,10 +106,12 @@ while True:
     if game_state == START_STATE:
         draw_start_screen()
     elif game_state == GAME_STATE:
-        draw_game_screen()
+        for i in range(8):
+            current_square = next_square
+            draw_game_screen()
+            pygame.time.wait(4000)
+            while next_square == current_square :
+                next_square = random.randint(0,len(squares))
 
-        # Check if it's time to change the color of a square
-        if not start_time:
-            start_time = time.time()
-        elif time.time() - start_time > 4:
-            if current
+
+        
