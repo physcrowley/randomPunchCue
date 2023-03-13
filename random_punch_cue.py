@@ -1,11 +1,14 @@
 import pygame
+import Xlib.display
+
+# Get the system screen resolution
+display = Xlib.display.Display()
+screen = display.screen()
+SCREEN_WIDTH = screen.width_in_pixels
+SCREEN_HEIGHT = screen.height_in_pixels
 
 # Initialize Pygame
 pygame.init()
-
-# Set the window dimensions
-WINDOW_WIDTH = 600
-WINDOW_HEIGHT = 400
 
 # Set the colors
 BLACK = (0, 0, 0)
@@ -28,11 +31,11 @@ game_state = START_STATE
 pygame.display.set_caption("Pygame Example")
 
 # Create the window
-window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Define the Rect objects for the buttons
-start_button = pygame.Rect(150, 200, 100, 50)
-quit_button = pygame.Rect(350, 200, 100, 50)
+start_button = pygame.Rect(SCREEN_WIDTH/4 - 50, SCREEN_HEIGHT/2, 100, 50)
+quit_button = pygame.Rect(3*SCREEN_WIDTH/4 - 50, SCREEN_HEIGHT/2, 100, 50)
 
 # Define the functions
 
@@ -42,7 +45,7 @@ def draw_start_screen():
 
     # Draw the title
     title_text = FONT.render("Welcome to Pygame Example", True, BLACK)
-    title_rect = title_text.get_rect(center=(WINDOW_WIDTH/2, 100))
+    title_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/4))
     window.blit(title_text, title_rect)
 
     # Draw the start button
@@ -62,8 +65,8 @@ def draw_game_screen():
     window.fill(WHITE)
 
     # Draw the squares
-    square_width = WINDOW_WIDTH/2
-    square_height = WINDOW_HEIGHT/3
+    square_width = SCREEN_WIDTH/2
+    square_height = SCREEN_HEIGHT/3
 
     for i in range(2):
         for j in range(3):
