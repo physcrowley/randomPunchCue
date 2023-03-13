@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 # Initialize Pygame
 pygame.init()
@@ -21,12 +22,14 @@ GAME_STATE = 1
 # Set the initial game state
 game_state = START_STATE
 
+# Set the screen size
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 1800
+
 # Set the window caption
 pygame.display.set_caption("Pygame Example")
 
 # Create the window
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 1800
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Define the Rect objects for the buttons
@@ -36,31 +39,54 @@ quit_button = pygame.Rect(3*SCREEN_WIDTH/4 - 50, SCREEN_HEIGHT/2, 100, 50)
 # Define the Rect objects for the squares
 square_width = SCREEN_WIDTH/2
 square_height = SCREEN_HEIGHT/3
-squares = []
 
+squares = []
 for i in range(2):
     for j in range(3):
         square = pygame.Rect(i*square_width, j*square_height, square_width, square_height)
-        if (i+j) % 2 == 0:
-            squares.append((square, GRAY))
+        squares.append(square)
+
+# Define the functions
+
+def draw_start_screen():
+    # Clear the screen
+    window.fill(WHITE)
+
+    # Draw the title
+    title_text = FONT.render("Welcome to Pygame Example", True, BLACK)
+    title_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/4))
+    window.blit(title_text, title_rect)
+
+    # Draw the start button
+    pygame.draw.rect(window, GREEN, start_button)
+    start_text = FONT.render("Start", True, WHITE)
+    start_rect = start_text.get_rect(center=start_button.center)
+    window.blit(start_text, start_rect)
+
+    # Draw the quit button
+    pygame.draw.rect(window, RED, quit_button)
+    quit_text = FONT.render("Quit", True, WHITE)
+    quit_rect = quit_text.get_rect(center=quit_button.center)
+    window.blit(quit_text, quit_rect)
+
+def draw_game_screen():
+    # Clear the screen
+    window.fill(WHITE)
+
+    # Draw the squares
+    for i, square in enumerate(squares):
+        if i == current_square:
+            pygame.draw.rect(window, RED, square)
+        elif (i+j) % 2 == 0:
+            pygame.draw.rect(window, BLACK, square)
         else:
-            squares.append((square, BLACK))
-
-# Define the function to randomly change the color of a square
-def change_color():
-    for i in range(8):
-        square_index = random.randint(0, len(squares)-1)
-        square, color = squares[square_index]
-        squares[square_index] = (square, RED)
-        pygame.time.wait(4000)
-        squares[square_index] = (square, color)
-        pygame.time.wait(4000)
-
-    # Change the game state back to START_STATE
-    global game_state
-    game_state = START_STATE
+            pygame.draw.rect(window, GRAY, square)
 
 # Start the game loop
+current_square = None
+start_time = None
+red_count = 0
+
 while True:
     # Check for events
     for event in pygame.event.get():
@@ -77,29 +103,12 @@ while True:
 
     # Draw the appropriate screen
     if game_state == START_STATE:
-        # Clear the screen
-        window.fill(WHITE)
-
-        # Draw the title
-        title_text = FONT.render("Welcome to Pygame Example", True, BLACK)
-        title_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/4))
-        window.blit(title_text, title_rect)
-
-        # Draw the start button
-        pygame.draw.rect(window, GREEN, start_button)
-        start_text = FONT.render("Start", True, WHITE)
-        start_rect = start_text.get_rect(center=start_button.center)
-        window.blit(start_text, start_rect)
-
-        # Draw the quit button
-        pygame.draw.rect(window, RED, quit_button)
-        quit_text = FONT.render("Quit", True, WHITE)
-        quit_rect = quit_text.get_rect(center=quit_button.center)
-        window.blit(quit_text, quit_rect)
-
+        draw_start_screen()
     elif game_state == GAME_STATE:
-        # Clear the screen
-        window.fill(WHITE)
+        draw_game_screen()
 
-        # Draw the squares
-        for square, color in squares:
+        # Check if it's time to change the color of a square
+        if not start_time:
+            start_time = time.time()
+        elif time.time() - start_time > 4:
+            if current
